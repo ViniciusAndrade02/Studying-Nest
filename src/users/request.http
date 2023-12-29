@@ -7,3 +7,23 @@ content-type: application/json
   "email" : "vineeee@gmail.com",
   "password": "123"
 }
+
+
+###FIND USER FOR ID
+GET http://localhost:3000/auth/1
+
+###Find All user com EMAIL
+GET http://localhost:3000/auth?email=vineeee@gmail.com
+
+###DELETE USER
+DELETE http://localhost:3000/auth/1
+
+###UPDATE USER
+
+PATCH http://localhost:3000/auth/2
+content-type: application/json
+
+{
+  "email":"leite@gmail.com",
+  "password": "10010"
+}

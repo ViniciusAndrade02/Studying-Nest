@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { StringifyOptions } from 'querystring';
 
 @Injectable()
 export class UsersService {
@@ -15,8 +16,33 @@ export class UsersService {
     return this.repo.save(user)
     
   }
+ 
+  //buscar somente 1
+  findOne(id:number){
+    return this.repo.findOneBy({id})
+  }
 
+  //buscar todos email que possue o que foi digitado pelo "email"
+  find(email:string){
+    return this.repo.find( {where: {email}} )
+  }
 
-  
+  async update(id: number, attrs:Partial<User>){
+    const user = await this.findOne(id);
+    if(!user){
+      throw new Error('user not found')
+    }
+    Object.assign(user,attrs); //para copiar as propriedades do objeto attrs para o objeto user
+    return this.repo.save(user)
+  }
+
+  async remove(id: number){
+    const user = await this.findOne(id);
+    if(!user){
+      throw new Error('user not found')
+    }
+    return this.repo.remove(user)
+  }
+
 }
 
