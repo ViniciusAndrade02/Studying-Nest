@@ -1,16 +1,16 @@
 ###CREATE A NEW USER
-
 POST http://localhost:3000/auth/signup
 content-type: application/json
-
 {
   "email" : "vineeee@gmail.com",
   "password": "123"
 }
 
-
 ###FIND USER FOR ID
-GET http://localhost:3000/auth/1
+GET http://localhost:3000/auth/user/2
+
+###FIND ALL USERS
+GET http://localhost:3000/auth/all
 
 ###Find All user com EMAIL
 GET http://localhost:3000/auth?email=vineeee@gmail.com
@@ -19,10 +19,8 @@ GET http://localhost:3000/auth?email=vineeee@gmail.com
 DELETE http://localhost:3000/auth/1
 
 ###UPDATE USER
-
 PATCH http://localhost:3000/auth/2
 content-type: application/json
-
 {
   "email":"leite@gmail.com",
   "password": "10010"

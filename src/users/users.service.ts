@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { StringifyOptions } from 'querystring';
+
 
 @Injectable()
 export class UsersService {
@@ -20,6 +20,10 @@ export class UsersService {
   //buscar somente 1
   findOne(id:number){
     return this.repo.findOneBy({id})
+  }
+
+  findAll(){
+    return this.repo.find()
   }
 
   //buscar todos email que possue o que foi digitado pelo "email"

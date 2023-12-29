@@ -14,9 +14,14 @@ export class UsersController {
     console.log(body)
   }
 
-  @Get('/:id')
+  @Get('/user/:id')
   findUser(@Param('id') id:string){
     return this.userService.findOne(parseInt(id))
+  }
+
+  @Get('/all')
+  UserAll(){
+    return this.userService.findAll()
   }
 
   @Get()
