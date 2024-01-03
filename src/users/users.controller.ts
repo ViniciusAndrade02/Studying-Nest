@@ -7,11 +7,13 @@ import {
   Query,
   Param,
   Delete,
-  NotFoundException,
+  NotFoundException
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dtos'; //validação
 import { UpdateUserDto } from './dtos/update-user.dtos';
 import { UsersService } from './users.service';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { UserDto } from './dtos/user.dto';
 
 @Controller('auth')
 export class UsersController {
@@ -23,6 +25,8 @@ export class UsersController {
     console.log(body);
   }
 
+  //@UseInterceptors(new SerializeInterceptor(UserDto))
+  @Serialize(UserDto)
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.userService.findOne(parseInt(id));
