@@ -19,6 +19,12 @@ export class UsersService {
  
   //buscar somente 1
   findOne(id:number){
+
+    //parte de cadastramento
+    if(!id){
+      return null
+    }
+
     return this.repo.findOneBy({id})
   }
 

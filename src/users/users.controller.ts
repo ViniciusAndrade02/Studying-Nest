@@ -7,7 +7,8 @@ import {
   Query,
   Param,
   Delete,
-  NotFoundException
+  NotFoundException,
+  Session,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dtos'; //validação
 import { UpdateUserDto } from './dtos/update-user.dtos';
@@ -20,17 +21,43 @@ import { AuthService } from './auth.service';
 export class UsersController {
   constructor(
     private userService: UsersService,
-    private authService:AuthService
-    ) {}
+    private authService: AuthService,
+  ) {}
+
+  //armazenar
+  @Get('/colors/:color')
+  setColor(@Param('color') color: string, @Session() sessing: any) {
+    sessing.color = color;
+  }
+
+  //mostrar
+  @Get('sessions')
+  getColor(@Session() session:any){
+    return [session.color,session.userId]
+  }
+
+  @Get('/whoami')
+  whoAmI(@Session() session:any){
+    return this.userService.findOne(session.userId)
+  }
+
+  @Post('/signout')
+  signOut(@Session() session:any){
+    session.userId=null
+  }
 
   @Post('/signup')
-  createUser(@Body() body: CreateUserDto) {
-    return this.authService.signup(body.email,body.password)
+  async createUser(@Body() body: CreateUserDto, @Session() session:any) {
+    const user = await this.authService.signup(body.email, body.password);
+    session.userId = user.id
+    return user
   }
 
   @Post('/signin')
-  signin(@Body() body:CreateUserDto){
-    return this.authService.signin(body.email,body.password)
+  async signin(@Body() body: CreateUserDto, @Session() session:any) {
+    const user = await this.authService.signin(body.email, body.password);
+    session.userId = user.id
+    return user
   }
 
   //@UseInterceptors(new SerializeInterceptor(UserDto))
@@ -38,10 +65,10 @@ export class UsersController {
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.userService.findOne(parseInt(id));
-    if(!user){
-      throw new NotFoundException('user not found mother a fuck')
+    if (!user) {
+      throw new NotFoundException('user not found mother a fuck');
     }
-    return user
+    return user;
   }
 
   @Get('/all')
