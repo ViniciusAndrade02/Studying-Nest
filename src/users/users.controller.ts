@@ -9,6 +9,7 @@ import {
   Delete,
   NotFoundException,
   Session,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dtos'; //validação
 import { UpdateUserDto } from './dtos/update-user.dtos';
@@ -16,8 +17,13 @@ import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { User } from './user.entity';
 
 @Controller('auth')
+@Serialize(UserDto)
+// @UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
     private userService: UsersService,
@@ -32,8 +38,8 @@ export class UsersController {
 
   //mostrar
   @Get('sessions')
-  getColor(@Session() session:any){
-    return [session.color,session.userId]
+  getColor(@Session() session: any) {
+    return [session.color, session.userId];
   }
 
   @Get('/whoami')
@@ -41,27 +47,31 @@ export class UsersController {
     return this.userService.findOne(session.userId)
   }
 
+  // @Get('/whoami')
+  // whoAmI(@CurrentUser() user: User) {
+  //   return user;
+  // }
+
   @Post('/signout')
-  signOut(@Session() session:any){
-    session.userId=null
+  signOut(@Session() session: any) {
+    session.userId = null;
   }
 
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto, @Session() session:any) {
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signup(body.email, body.password);
-    session.userId = user.id
-    return user
+    session.userId = user.id;
+    return user;
   }
 
   @Post('/signin')
-  async signin(@Body() body: CreateUserDto, @Session() session:any) {
+  async signin(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signin(body.email, body.password);
-    session.userId = user.id
-    return user
+    session.userId = user.id;
+    return user;
   }
 
   //@UseInterceptors(new SerializeInterceptor(UserDto))
-  @Serialize(UserDto)
   @Get('/user/:id')
   async findUser(@Param('id') id: string) {
     const user = await this.userService.findOne(parseInt(id));
