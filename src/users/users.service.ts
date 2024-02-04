@@ -1,58 +1,49 @@
-import { Injectable,NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 
-
 @Injectable()
 export class UsersService {
+  constructor(@InjectRepository(User) private repo: Repository<User>) {}
 
-  constructor(@InjectRepository(User) private repo: Repository<User>) {
+  create(email: string, password: string) {
+    const user = this.repo.create({ email, password }); //instanciar primeiro
+
+    return this.repo.save(user);
   }
 
-  create(email:string,password:string){
-    const user = this.repo.create({email,password}) //instanciar primeiro
-
-    return this.repo.save(user)
-    
-  }
- 
   //buscar somente 1
-  findOne(id:number){
-
-    //parte de cadastramento
-    if(!id){
-      return null
+  findOne(id: number) {
+    if (!id) {
+      return null;
     }
-
-    return this.repo.findOneBy({id})
+    return this.repo.findOneBy({ id });
   }
 
-  findAll(){
-    return this.repo.find()
+  findAll() {
+    return this.repo.find();
   }
 
   //buscar todos email que possue o que foi digitado pelo "email"
-  find(email:string){
-    return this.repo.find( {where: {email}} )
+  find(email: string) {
+    return this.repo.find({ where: { email } });
   }
 
-  async update(id: number, attrs:Partial<User>){
+  async update(id: number, attrs: Partial<User>) {
     const user = await this.findOne(id);
-    if(!user){
-      throw new NotFoundException('user not found')
+    if (!user) {
+      throw new NotFoundException('user not found');
     }
-    Object.assign(user,attrs); //para copiar as propriedades do objeto attrs para o objeto user
-    return this.repo.save(user)
+    Object.assign(user, attrs); //para copiar as propriedades do objeto attrs para o objeto user
+    return this.repo.save(user);
   }
 
-  async remove(id: number){
+  async remove(id: number) {
     const user = await this.findOne(id);
-    if(!user){
-      throw new NotFoundException('user not found')
+    if (!user) {
+      throw new NotFoundException('user not found');
     }
-    return this.repo.remove(user)
+    return this.repo.remove(user);
   }
-
 }
-

@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/signup
 content-type: application/json
 
 {
-  "email" : "text2jhgf4@text.com",
-  "password": "leite"
+  "email" : "vibi22@sla.com",
+  "password": "sla2"
 }
 
 ###LOGIN
@@ -12,8 +12,8 @@ POST http://localhost:3000/auth/signin
 content-type: application/json
 
 {
-  "email" : "text@text.com",
-  "password": "leite"
+    "id": 2,
+    "email": "vinicius@text.com"
 }
 
 ### Get the currently singed in user

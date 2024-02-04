@@ -12,6 +12,11 @@ import { CurrentUserInterceptor } from './interceptors/current-user.interceptor'
   controllers: [UsersController],
   providers: [
     UsersService,
-    AuthService],
+    AuthService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CurrentUserInterceptor,
+    },
+  ],
 })
 export class UsersModule {}
