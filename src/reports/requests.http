@@ -4,9 +4,17 @@ Content-Type: application/json
 {
   "make":"toyota",
   "model":"corolla",
-  "year":1980,
+  "year":2000,
   "mileage":10000,
   "lng":0,
   "lat":0,
   "price":50000
+}
+###APROVANDO
+
+PATCH http://localhost:3000/reports/5
+Content-Type: application/json
+
+{
+  "approved":false
 }
